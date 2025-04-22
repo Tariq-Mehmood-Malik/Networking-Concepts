@@ -21,11 +21,18 @@ When a frame is transmitted from a device in a specific VLAN, the switch adds a 
 **[Youtube](https://www.youtube.com/watch?v=apwWzXjoVXE)**
 
 
+
+---   
+
+
+
+
 The **Linksys LGS124 24-Port Business Gigabit Switch** is a **Layer 2 unmanaged switch**. It operates primarily at the Data Link Layer (Layer 2) of the OSI model, handling tasks such as MAC address learning and forwarding, VLAN tagging, and basic Quality of Service (QoS) based on 802.1p and DSCP markings. This switch does **not** perform Layer 3 routing functions like IP routing or inter-VLAN routing.
 
 For Layer 3 capabilities, such as routing between VLANs or IP subnets, you would need a Layer 3 switch or a router. For example, the **Linksys SGE2000P** is a Layer 3 switch that supports advanced routing features. 
 
-
+---
+  
 
 
 Yes, if you have two **Linksys LGS124 24-Port Business Gigabit Switches**, which are **Layer 2 unmanaged switches**, and you want devices in different VLANs to communicate with each other, you will need an additional device that supports **Layer 3 routing**, such as a **router** or a **Layer 3 switch**.
@@ -136,3 +143,84 @@ While it works technically (because they fall under the same subnet), this is no
 - **Best Practice**: It's still generally a better idea to use **different subnets** for different VLANs to maintain clear separation between them, and then use **Layer 3 routing** to enable communication if necessary. Otherwise, you're defeating the purpose of VLAN segmentation.
 
 **Layer 3 routing is not needed** between these two VLANs in this scenario, but it's not an ideal setup for managing VLANs effectively.
+
+
+
+--- 
+
+
+A **subinterface** on a router is a logical division of a physical interface, allowing a single physical port to handle multiple virtual networks or VLANs. Each subinterface can be assigned its own IP address and VLAN ID, enabling the router to manage traffic for different networks over the same physical connection.
+
+---
+
+### 🔧 Uses of Subinterfaces
+
+1. **Inter-VLAN Routing (Router-on-a-Stick):**
+   Subinterfaces are commonly used in a "Router-on-a-Stick" configuration, where a single router interface is divided into multiple subinterfaces, each associated with a different VLAN. This setup allows devices in different VLANs to communicate with each other.
+
+2. **Traffic Segmentation:**
+   By creating subinterfaces, a router can manage traffic for multiple networks or VLANs using a single physical interface, simplifying network design and reducing hardware requirements.
+
+3. **Efficient Use of Resources:**
+   Subinterfaces enable the use of a single physical port to support multiple logical networks, conserving router interfaces and simplifying network management.
+
+4. **Support for Various Network Protocols:**
+   Subinterfaces can be configured to support various network protocols and features, including IP routing, Quality of Service (QoS), and First Hop Redundancy Protocols (FHRP) like HSRP, VRRP, and GLBP.
+
+---
+
+### 🛠️ Example Configuration
+To configure subinterfaces on a Cisco router for inter-VLAN routing, follow these step:
+
+1. **Access the Router's CLI:**
+   ```bash
+   Router> enable
+   Router# configure terminal
+   ``
+
+
+2. **Create and Configure Subinterfaces:**
+   ```bash
+   Router(config)# interface GigabitEthernet0/1.10
+   Router(config-subif)# encapsulation dot1Q 10
+   Router(config-subif)# ip address 192.168.10.1 255.255.255.0
+   Router(config-subif)# exit
+
+   Router(config)# interface GigabitEthernet0/1.20
+   Router(config-subif)# encapsulation dot1Q 20
+   Router(config-subif)# ip address 192.168.20.1 255.255.255.0
+   Router(config-subif)# exit
+   ``
+
+
+3. **Enable the Physical Interface:**
+   ```bash
+   Router(config)# interface GigabitEthernet0/1
+   Router(config-if)# no shutdown
+   ``
+
+In this example, `GigabitEthernet0/1.10` and `GigabitEthernet0/1.20` are subinterfaces for VLANs 10 and 20, respectively. Each subinterface is configured with an IP address that serves as the default gateway for devices in the corresponding VLA.
+
+---
+
+### ✅ Benefits of Using Subinterfaces
+
+- **Cost-Effective:* Reduces the need for multiple physical interfaces, saving on hardware cost.
+
+- **Simplified Network Design:* Allows multiple VLANs to be managed through a single physical connectio.
+
+- **Scalability:* Supports a large number of VLANs, as each subinterface can be associated with a different VLA.
+
+- **Enhanced Security and Control:* Enables the application of security policies and traffic management on a per-VLAN basi.
+
+---
+
+### ⚠️ Considerations
+
+- **Single Point of Failure:* If the physical interface fails, all subinterfaces associated with it will be affecte.
+
+- **Performance:* The router's CPU handles all traffic for the subinterfaces, which can impact performance if not properly manage.
+
+- **Configuration Complexity:* Managing a large number of subinterfaces can become complex and may require careful planning and documentatio.
+
+---
