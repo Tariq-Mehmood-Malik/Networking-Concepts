@@ -42,3 +42,65 @@ The Linksys LGS124 switches operate at Layer 2 and support VLAN segmentation. Ho
 
 
 
+
+
+
+
+
+
+
+
+
+Sure! Let me explain it in simpler terms.
+
+### What is a Trunk Link?
+
+A **trunk link** is like a big highway that carries traffic from multiple **VLANs** (virtual networks) over a single connection. Think of it as a road where cars (data) from different neighborhoods (VLANs) travel together.
+
+### How Does the Router Help with Communication?
+
+Normally, computers in different VLANs can’t talk to each other directly. But a **router** can help by routing the traffic between them.
+
+- The router has a **single physical port** connected to the trunk link (the "big highway").
+- On the router, this single port is split into **subinterfaces**. Each subinterface is like a little section of the port that’s assigned to a specific VLAN.
+
+### What Are Subinterfaces?
+
+Imagine the router has a big road (the trunk link) but needs to build separate lanes (subinterfaces) for each neighborhood (VLAN). Each lane gets a specific address (called an **IP address**) and can send traffic for a particular VLAN.
+
+### Here's How It Works:
+
+1. **VLANs on the Switch**: The switch creates different VLANs, like separating a city into different districts.
+2. **Trunk Link**: The switch sends traffic from these different VLANs over a single link (the trunk) to the router.
+3. **Router Subinterfaces**: The router has a special subinterface for each VLAN. The router checks the traffic and sends it to the correct place based on the destination address.
+
+### Example:
+
+Let's say you have two VLANs:
+
+- **VLAN 10**: A group of devices with addresses like `192.168.10.x`.
+- **VLAN 20**: A different group of devices with addresses like `192.168.20.x`.
+
+And you have a **Router** connected to the switch.
+
+- The router’s **physical port** (`GigabitEthernet0/1`) is connected to the switch’s trunk link.
+- The router creates **two subinterfaces**:
+  - `GigabitEthernet0/1.10` for **VLAN 10**.
+  - `GigabitEthernet0/1.20` for **VLAN 20**.
+
+### Communication Between VLANs:
+
+- If a computer in **VLAN 10** wants to talk to a computer in **VLAN 20**, the message first goes to the router’s subinterface for **VLAN 10** (`GigabitEthernet0/1.10`).
+- The router checks the message, sees that it’s for **VLAN 20**, and sends it to the subinterface for **VLAN 20** (`GigabitEthernet0/1.20`).
+- Now, the message is in **VLAN 20**, and it can reach the computer there.
+
+### Why Use This Method?
+
+- **Efficient**: You only need one physical link between the switch and router, not separate cables for each VLAN.
+- **Simple**: You can use one router interface for multiple VLANs, instead of adding more router interfaces.
+
+### Simple Summary:
+
+1. **Trunk link**: One cable that carries data for many VLANs.
+2. **Router subinterfaces**: The router splits its single connection into smaller sections, each handling a different VLAN.
+3. **Inter-VLAN communication**: The router helps devices in different VLANs talk to each other by routing the traffic between the subinterfaces.
