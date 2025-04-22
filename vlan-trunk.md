@@ -16,4 +16,6 @@ When a frame is transmitted from a device in a specific VLAN, the switch adds a 
 - **Simplified Network Management**: Centralized configuration of VLANs on trunk ports simplifies network management and reduces the complexity of wiring.
 
 - **Scalability**: Trunking supports a large number of VLANs, making it suitable for expanding networks without significant changes to the physical infrastructure.
- 
+
+
+**[Youtube](https://www.youtube.com/watch?v=apwWzXjoVXE)**
