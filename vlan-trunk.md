@@ -51,7 +51,7 @@ The Linksys LGS124 switches operate at Layer 2 and support VLAN segmentation. Ho
 
 
 
-Sure! Let me explain it in simpler terms.
+---   
 
 ### What is a Trunk Link?
 
@@ -104,3 +104,35 @@ And you have a **Router** connected to the switch.
 1. **Trunk link**: One cable that carries data for many VLANs.
 2. **Router subinterfaces**: The router splits its single connection into smaller sections, each handling a different VLAN.
 3. **Inter-VLAN communication**: The router helps devices in different VLANs talk to each other by routing the traffic between the subinterfaces.
+
+
+---   
+
+
+If **VLAN 10** has the IP address range `192.168.10.0/16` and **VLAN 20** has the IP address range `192.168.20.0/16`, both of these ranges technically fall under the same **/16 subnet** (because `192.168.x.x` is part of the same larger `192.168.0.0/16` subnet). 
+
+Here’s how this would work:
+
+### **1. Same Large Subnet:**
+- A **/16 subnet** allows for **65,536 IP addresses** (from `192.168.0.0` to `192.168.255.255`).
+- Both `192.168.10.0/16` and `192.168.20.0/16` are technically part of the same larger **`192.168.0.0/16` subnet** because the first two octets (`192.168`) are the same.
+  
+This means that even though they are in **different VLANs**, they are part of the same **larger subnet** (`192.168.0.0/16`), and **Layer 3 routing may not be required** between them for communication.
+
+### **2. What Happens at Layer 2 (Switching):**
+- If devices in **VLAN 10** and **VLAN 20** are within the same larger subnet (`192.168.0.0/16`), the switch can forward traffic between them **without needing a router**.
+- Devices in **VLAN 10** and **VLAN 20** will be able to communicate directly with each other at **Layer 2** (using MAC addresses) because the **subnet mask** of `/16` means the IP addresses from `192.168.10.x` and `192.168.20.x` are in the same **network range**.
+  
+So, devices from **VLAN 10** and **VLAN 20** **don’t need Layer 3 routing**; the switch can forward frames between them since they are part of the same large subnet.
+
+### **3. Possible Issues and Considerations:**
+While it works technically (because they fall under the same subnet), this is not considered **best practice** for VLAN design, and here's why:
+
+- **IP Address Overlap**: Even though `192.168.10.0/16` and `192.168.20.0/16` technically fall under the same larger network, **subnet overlap** might cause issues if not managed properly. For instance, the devices might have **confusion about the correct IP range** they are in because they technically belong to the same large subnet.
+- **VLAN Purpose**: VLANs are usually created to **segregate broadcast domains** and **improve network management**. Putting devices from multiple **VLANs** into the same subnet goes against the purpose of VLANs, which is to create logical separation. Communication between VLANs should generally be handled by a **router** or **Layer 3 switch** for security and performance reasons.
+
+### **Summary:**
+- **Technically**: Since both `192.168.10.0/16` and `192.168.20.0/16` are part of the same `192.168.0.0/16` subnet, devices in **VLAN 10** and **VLAN 20** would be able to communicate directly with each other **without needing Layer 3 routing**.
+- **Best Practice**: It's still generally a better idea to use **different subnets** for different VLANs to maintain clear separation between them, and then use **Layer 3 routing** to enable communication if necessary. Otherwise, you're defeating the purpose of VLAN segmentation.
+
+**Layer 3 routing is not needed** between these two VLANs in this scenario, but it's not an ideal setup for managing VLANs effectively.
